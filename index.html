@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAMANIST - 鋼の自制心</title>
+    <title>GAMANIST</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #0f172a;
             --card-color: #1e293b;
             --text-color: #f8fafc;
-            --accent-color: #fbbf24; /* ゴールド */
+            --accent-color: #fbbf24; 
             --danger-color: #ef4444;
             --nav-bg: #1e293b;
         }
@@ -23,7 +23,7 @@
 
         .hidden { display: none !important; }
 
-        /* ヘッダー */
+    
         header {
             padding: 20px; text-align: center;
             border-bottom: 2px solid var(--accent-color);
@@ -32,11 +32,18 @@
             position: sticky; top: 0; z-index: 100;
         }
 
+      
+        @media (min-width: 768px) {
+            header {
+                margin-top: 60px; 
+            }
+        }
+
         h1 { margin: 0; font-size: 1.5rem; letter-spacing: 2px; }
 
         main { padding: 20px; padding-bottom: 100px; max-width: 500px; margin: 0 auto; }
 
-        /* カード（修行リスト） */
+      
         .card {
             background: var(--card-color); padding: 20px;
             border-radius: 16px; margin-bottom: 15px;
@@ -58,11 +65,12 @@
 
         .fail-btn:hover { background: var(--danger-color); color: white; }
 
-        /* フォーム */
+       
         .form-container { margin-top: 20px; }
         input {
             width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #334155;
             background: #0f172a; color: white; margin-bottom: 20px; font-size: 1rem;
+            box-sizing: border-box; 
         }
 
         .save-btn {
@@ -71,7 +79,7 @@
             font-weight: bold; font-size: 1rem; cursor: pointer;
         }
 
-        /* ナビゲーション（PCは上、スマホは下） */
+        
         nav {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: var(--nav-bg); display: flex; justify-content: space-around;
@@ -80,7 +88,6 @@
 
         @media (min-width: 768px) {
             nav { top: 0; bottom: auto; border-top: none; border-bottom: 1px solid #334155; height: 60px; }
-            header { margin-top: 60px; }
         }
 
         nav a { color: #94a3b8; text-decoration: none; font-size: 20px; display: flex; flex-direction: column; align-items: center; font-size: 10px; cursor: pointer; }
@@ -92,6 +99,11 @@
 </head>
 <body>
 
+<nav>
+    <a id="nav-home" class="active" onclick="showScreen('home')"><i class="fas fa-fire"></i>修行中</a>
+    <a id="nav-add" onclick="showScreen('add')"><i class="fas fa-plus-circle"></i>誓う</a>
+</nav>
+
 <header>
     <h1>GAMANIST</h1>
 </header>
@@ -99,8 +111,7 @@
 <main id="app">
     <section id="home-screen">
         <h2 style="font-size: 1.2rem;">現在の修行</h2>
-        <div id="gaman-list">
-            </div>
+        <div id="gaman-list"></div>
     </section>
 
     <section id="add-screen" class="hidden">
@@ -111,11 +122,6 @@
         </div>
     </section>
 </main>
-
-<nav>
-    <a id="nav-home" class="active" onclick="showScreen('home')"><i class="fas fa-fire"></i>修行中</a>
-    <a id="nav-add" onclick="showScreen('add')"><i class="fas fa-plus-circle"></i>誓う</a>
-</nav>
 
 <script>
     let gamans = JSON.parse(localStorage.getItem('gamans')) || [];
@@ -196,9 +202,7 @@
         `).join('');
     }
 
-    // 1秒ごとにタイマーを更新
     setInterval(updateTimers, 1000);
-    // 初期表示
     renderList();
 </script>
 
