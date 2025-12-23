@@ -105,7 +105,7 @@
     <a id="nav-home" class="active" onclick="showScreen('home')"><i class="fas fa-fire"></i>修行中</a>
     <a id="nav-add" onclick="showScreen('add')"><i class="fas fa-plus-circle"></i>誓う</a>
     <a id="nav-stats" onclick="showScreen('stats')"><i class="fas fa-chart-bar"></i>戦績</a>
-    <a id="nav-settings" onclick="showScreen('settings')"><i class="fas fa-cog"></i>設定</a>
+    <a id="nav-info" onclick="showScreen('info')"><i class="fas fa-info-circle"></i>情報</a>
 </nav>
 
 <header>
@@ -129,29 +129,21 @@
         <div id="history-list"></div>
     </section>
 
-    <section id="settings-screen" class="hidden">
-        <h2 style="font-size: 1.1rem;">情報</h2>
-        
-        <div class="card" style="display: block;">
-            <h3>アプリについて</h3>
-            <p style="font-size: 0.8rem; color: #94a3b8;">
-                GAMANIST v1.0.0<br>
-                あなたの自制心を鍛えるトレーニングツールです。
-            </p>
+<section id="info-screen" class="hidden">
+        <h2>アプリ情報</h2>
+        <div class="card" style="display:block">
+            <h3>GAMANIST v1.0.0</h3>
+            <p class="info-section">自制心を鍛え、鋼の意志を持つためのアプリです。</p>
         </div>
-
-        <div class="card" style="display: block;">
+        <div class="card" style="display:block">
             <h3>プライバシーポリシー</h3>
-            <div style="font-size: 0.7rem; color: #94a3b8; height: 100px; overflow-y: scroll; border: 1px solid #334155; padding: 10px; border-radius: 8px;">
-                【個人情報の取り扱いについて】<br>
-                1. データの保存: 本アプリで入力された修行内容や戦績データは、利用者の端末内（LocalStorage）にのみ保存され、開発者が収集することはありません。<br>
-                2. 広告と分析: 本アプリではGoogle AdSenseおよびGoogle Analyticsを使用する場合があります。これらはクッキーを使用して利用状況を計測し、最適な広告を表示します。<br>
-                3. 免責事項: 本アプリの利用により生じたいかなる損害についても、開発者は責任を負いません。
+            <div class="policy-box">
+                本アプリは、ユーザーの入力データを端末内（LocalStorage）にのみ保存します。Google AdSenseおよびAnalyticsを利用する場合、クッキーを通じて利用状況を収集することがありますが、個人を特定する情報は含まれません。利用により生じた損害に責任は負いかねます。
             </div>
         </div>
-
-        <div id="ad-space" style="margin-top: 20px; text-align: center; color: #475569; font-size: 10px; border: 1px dashed #475569; padding: 20px;">
-            AD SPACE (Google AdSense)
+        <div class="card" style="display:block">
+            <h3>お問い合わせ</h3>
+            <p class="info-section">サポート：support@example.com</p>
         </div>
     </section>
 </main>
