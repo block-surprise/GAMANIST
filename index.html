@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAMANIST - 鋼の自制心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #fbbf24; /* ゴールド */
+            --danger-color: #ef4444;
+            --nav-bg: #1e293b;
+        }
+
+        body {
+            margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color); color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ヘッダー */
+        header {
+            padding: 20px; text-align: center;
+            border-bottom: 2px solid var(--accent-color);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; letter-spacing: 2px; }
+
+        main { padding: 20px; padding-bottom: 100px; max-width: 500px; margin: 0 auto; }
+
+        /* カード（修行リスト） */
+        .card {
+            background: var(--card-color); padding: 20px;
+            border-radius: 16px; margin-bottom: 15px;
+            border-left: 5px solid var(--accent-color);
+            display: flex; justify-content: space-between; align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .gaman-info h3 { margin: 0; font-size: 1.1rem; }
+        .timer { font-family: monospace; color: var(--accent-color); font-size: 0.9rem; }
+
+        .fail-btn {
+            background: transparent; border: 1px solid var(--danger-color);
+            color: var(--danger-color); padding: 8px 12px; border-radius: 8px;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        .fail-btn:hover { background: var(--danger-color); color: white; }
+
+        /* フォーム */
+        .form-container { margin-top: 20px; }
+        input {
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #334155;
+            background: #0f172a; color: white; margin-bottom: 20px; font-size: 1rem;
+        }
+
+        .save-btn {
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
+            background: var(--accent-color); color: #0f172a;
+            font-weight: bold; font-size: 1rem; cursor: pointer;
+        }
+
+        /* ナビゲーション（PCは上、スマホは下） */
+        nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg); display: flex; justify-content: space-around;
+            padding: 15px 0; border-top: 1px solid #334155; z-index: 1000;
+        }
+
+        @media (min-width: 768px) {
+            nav { top: 0; bottom: auto; border-top: none; border-bottom: 1px solid #334155; height: 60px; }
+            header { margin-top: 60px; }
+        }
+
+        nav a { color: #94a3b8; text-decoration: none; font-size: 20px; display: flex; flex-direction: column; align-items: center; font-size: 10px; cursor: pointer; }
+        nav a i { font-size: 24px; margin-bottom: 4px; }
+        nav a.active { color: var(--accent-color); }
+
+        .empty-state { text-align: center; color: #64748b; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>GAMANIST</h1>
+</header>
+
+<main id="app">
+    <section id="home-screen">
+        <h2 style="font-size: 1.2rem;">現在の修行</h2>
+        <div id="gaman-list">
+            </div>
+    </section>
+
+    <section id="add-screen" class="hidden">
+        <h2 style="font-size: 1.2rem;">新たな誓い</h2>
+        <div class="form-container">
+            <input type="text" id="gaman-input" placeholder="例：寝る前のスマホ、間食..." maxlength="20">
+            <button class="save-btn" onclick="addGaman()">修行開始</button>
+        </div>
+    </section>
+</main>
+
+<nav>
+    <a id="nav-home" class="active" onclick="showScreen('home')"><i class="fas fa-fire"></i>修行中</a>
+    <a id="nav-add" onclick="showScreen('add')"><i class="fas fa-plus-circle"></i>誓う</a>
+</nav>
+
+<script>
+    let gamans = JSON.parse(localStorage.getItem('gamans')) || [];
+
+    function showScreen(screen) {
+        const home = document.getElementById('home-screen');
+        const add = document.getElementById('add-screen');
+        const navHome = document.getElementById('nav-home');
+        const navAdd = document.getElementById('nav-add');
+
+        if (screen === 'home') {
+            home.classList.remove('hidden');
+            add.classList.add('hidden');
+            navHome.classList.add('active');
+            navAdd.classList.remove('active');
+            renderList();
+        } else {
+            home.classList.add('hidden');
+            add.classList.remove('hidden');
+            navHome.classList.remove('active');
+            navAdd.classList.add('active');
+        }
+    }
+
+    function addGaman() {
+        const input = document.getElementById('gaman-input');
+        if (!input.value) return;
+
+        const newGaman = {
+            id: Date.now(),
+            title: input.value,
+            startTime: Date.now()
+        };
+
+        gamans.push(newGaman);
+        localStorage.setItem('gamans', JSON.stringify(gamans));
+        input.value = "";
+        showScreen('home');
+    }
+
+    function deleteGaman(id) {
+        if(confirm('誘惑に負けましたか？修行をやり直しましょう。')) {
+            gamans = gamans.filter(g => g.id !== id);
+            localStorage.setItem('gamans', JSON.stringify(gamans));
+            renderList();
+        }
+    }
+
+    function updateTimers() {
+        const now = Date.now();
+        gamans.forEach(g => {
+            const el = document.getElementById(`timer-${g.id}`);
+            if (el) {
+                const diff = now - g.startTime;
+                const hours = Math.floor(diff / 3600000);
+                const mins = Math.floor((diff % 3600000) / 60000);
+                const secs = Math.floor((diff % 60000) / 1000);
+                el.innerText = `継続：${hours}時間 ${mins}分 ${secs}秒`;
+            }
+        });
+    }
+
+    function renderList() {
+        const container = document.getElementById('gaman-list');
+        if (gamans.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-leaf" style="font-size: 3rem; margin-bottom: 10px;"></i><br>修行中の項目はありません</div>';
+            return;
+        }
+
+        container.innerHTML = gamans.map(g => `
+            <div class="card">
+                <div class="gaman-info">
+                    <h3>${g.title}</h3>
+                    <div class="timer" id="timer-${g.id}">計算中...</div>
+                </div>
+                <button class="fail-btn" onclick="deleteGaman(${g.id})">負けました</button>
+            </div>
+        `).join('');
+    }
+
+    // 1秒ごとにタイマーを更新
+    setInterval(updateTimers, 1000);
+    // 初期表示
+    renderList();
+</script>
+
+</body>
+</html>
