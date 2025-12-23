@@ -3,23 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAMANIST</title>
+    <title>GAMANIST - 鋼の自制心</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-      <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D6SC2D5KK4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-D6SC2D5KK4');
-</script>
     <style>
         :root {
             --bg-color: #0f172a;
             --card-color: #1e293b;
             --text-color: #f8fafc;
-            --accent-color: #fbbf24;
+            --accent-color: #fbbf24; /* ゴールド */
             --danger-color: #ef4444;
             --nav-bg: #1e293b;
         }
@@ -32,7 +23,7 @@
 
         .hidden { display: none !important; }
 
-      
+        /* ナビゲーション（PCは上、スマホは下） */
         nav {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: var(--nav-bg); display: flex; justify-content: space-around;
@@ -41,14 +32,14 @@
 
         @media (min-width: 768px) {
             nav { top: 0; bottom: auto; border-top: none; border-bottom: 1px solid #334155; height: 60px; }
-            body { padding-top: 60px; }
+            body { padding-top: 60px; } /* PC時の重なりを完全に回避 */
         }
 
         nav a { color: #94a3b8; text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
         nav a i { font-size: 20px; margin-bottom: 4px; }
         nav a.active { color: var(--accent-color); }
 
-     
+        /* ヘッダー */
         header {
             padding: 20px; text-align: center;
             border-bottom: 2px solid var(--accent-color);
@@ -60,7 +51,7 @@
 
         main { padding: 20px; padding-bottom: 100px; max-width: 500px; margin: 0 auto; }
 
-      
+        /* カード（修行リスト） */
         .card {
             background: var(--card-color); padding: 20px;
             border-radius: 16px; margin-bottom: 15px;
@@ -77,26 +68,36 @@
 
         .fail-btn {
             background: transparent; border: 1px solid var(--danger-color);
-            color: var(--danger-color); padding: 8px 12px; border-radius: 8px; cursor: pointer;
+            color: var(--danger-color); padding: 8px 12px; border-radius: 8px;
+            cursor: pointer; transition: 0.3s;
         }
 
-       
+        .fail-btn:hover { background: var(--danger-color); color: white; }
+
+        /* フォーム */
+        .form-container { margin-top: 20px; }
         input {
             width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #334155;
-            background: #0f172a; color: white; margin-bottom: 20px; box-sizing: border-box;
+            background: #0f172a; color: white; margin-bottom: 20px; font-size: 1rem;
+            box-sizing: border-box;
         }
 
         .save-btn {
             width: 100%; padding: 15px; border-radius: 12px; border: none;
-            background: var(--accent-color); color: #0f172a; font-weight: bold; cursor: pointer;
+            background: var(--accent-color); color: #0f172a;
+            font-weight: bold; font-size: 1rem; cursor: pointer;
         }
 
+        /* 戦績・情報エリア用 */
+        .empty-state { text-align: center; color: #64748b; margin-top: 50px; }
         .history-item {
             border-bottom: 1px solid #334155; padding: 10px 0; color: #94a3b8;
             display: flex; justify-content: space-between; font-size: 0.9rem;
         }
-
-        .empty-state { text-align: center; color: #64748b; margin-top: 50px; }
+        .policy-box {
+            height: 120px; overflow-y: scroll; border: 1px solid #334155;
+            padding: 10px; border-radius: 8px; margin-top: 10px; background: #0f172a; font-size: 0.75rem;
+        }
     </style>
 </head>
 <body>
@@ -120,8 +121,10 @@
 
     <section id="add-screen" class="hidden">
         <h2 style="font-size: 1.1rem;">新たな誓い</h2>
-        <input type="text" id="gaman-input" placeholder="例：SNSを見ない、間食禁止..." maxlength="20">
-        <button class="save-btn" onclick="addGaman()">修行開始</button>
+        <div class="form-container">
+            <input type="text" id="gaman-input" placeholder="例：SNS、間食、夜更かし..." maxlength="20">
+            <button class="save-btn" onclick="addGaman()">修行開始</button>
+        </div>
     </section>
 
     <section id="stats-screen" class="hidden">
@@ -129,21 +132,21 @@
         <div id="history-list"></div>
     </section>
 
-<section id="info-screen" class="hidden">
-        <h2>アプリ情報</h2>
+    <section id="info-screen" class="hidden">
+        <h2 style="font-size: 1.1rem;">情報とポリシー</h2>
         <div class="card" style="display:block">
             <h3>GAMANIST v1.0.0</h3>
-            <p class="info-section">自制心を鍛え、鋼の意志を持つためのアプリです。</p>
+            <p style="font-size: 0.85rem; color: #94a3b8;">あなたの自制心を「称号」で可視化する修行支援アプリです。</p>
         </div>
         <div class="card" style="display:block">
             <h3>プライバシーポリシー</h3>
             <div class="policy-box">
-                本アプリは、ユーザーの入力データを端末内（LocalStorage）にのみ保存します。Google AdSenseおよびAnalyticsを利用する場合、クッキーを通じて利用状況を収集することがありますが、個人を特定する情報は含まれません。利用により生じた損害に責任は負いかねます。
+                本アプリは、入力された修行データを端末内（LocalStorage）にのみ保存し、外部サーバーへ送信することはありません。Google AdSenseおよびAnalyticsを利用する場合、クッキーを使用して利用統計を収集することがありますが、個人を特定する情報は含みません。
             </div>
         </div>
         <div class="card" style="display:block">
             <h3>お問い合わせ</h3>
-            <p class="info-section">サポート：support@example.com</p>
+            <p style="font-size: 0.85rem; color: #94a3b8;">support@example.com</p>
         </div>
     </section>
 </main>
@@ -153,33 +156,30 @@
     let history = JSON.parse(localStorage.getItem('history')) || [];
 
     function showScreen(screen) {
-        document.getElementById('home-screen').classList.toggle('hidden', screen !== 'home');
-        document.getElementById('add-screen').classList.toggle('hidden', screen !== 'add');
-        document.getElementById('stats-screen').classList.toggle('hidden', screen !== 'stats');
-        
-        document.getElementById('nav-home').classList.toggle('active', screen === 'home');
-        document.getElementById('nav-add').classList.toggle('active', screen === 'add');
-        document.getElementById('nav-stats').classList.toggle('active', screen === 'stats');
+        const screens = ['home', 'add', 'stats', 'info'];
+        screens.forEach(s => {
+            document.getElementById(`${s}-screen`).classList.toggle('hidden', s !== screen);
+            document.getElementById(`nav-${s}`).classList.toggle('active', s === screen);
+        });
 
-        if(screen === 'home') renderList();
-        if(screen === 'stats') renderHistory();
+        if (screen === 'home') renderList();
+        if (screen === 'stats') renderHistory();
     }
 
     function addGaman() {
         const input = document.getElementById('gaman-input');
         if (!input.value) return;
-        gamans.push({ id: Date.now(), title: input.value, startTime: Date.now() });
+        const newGaman = { id: Date.now(), title: input.value, startTime: Date.now() };
+        gamans.push(newGaman);
         localStorage.setItem('gamans', JSON.stringify(gamans));
         input.value = "";
         showScreen('home');
     }
 
     function deleteGaman(id) {
-        if(confirm('誘惑に負けましたか？修行を記録に残します。')) {
+        if(confirm('誘惑に負けましたか？修行をやり直しましょう。')) {
             const target = gamans.find(g => g.id === id);
             const duration = Date.now() - target.startTime;
-            
-            // 履歴に追加
             history.unshift({ title: target.title, time: formatDuration(duration) });
             localStorage.setItem('history', JSON.stringify(history));
 
@@ -194,8 +194,7 @@
         if (sec < 60) return "修行生";
         if (sec < 3600) return "自制の徒";
         if (sec < 86400) return "鋼のガマニスト";
-        if (sec < 259200) return "自制の鉄人";
-        return "伝説のガマニスト";
+        return "自制の鉄人";
     }
 
     function formatDuration(diff) {
@@ -208,15 +207,15 @@
     function renderList() {
         const container = document.getElementById('gaman-list');
         if (gamans.length === 0) {
-            container.innerHTML = '<div class="empty-state">修行中の項目はありません</div>';
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-leaf" style="font-size: 3rem; margin-bottom: 10px;"></i><br>修行中の項目はありません</div>';
             return;
         }
         container.innerHTML = gamans.map(g => `
             <div class="card">
                 <div class="gaman-info">
                     <h3>${g.title}</h3>
-                    <div class="timer" id="timer-${g.id}"></div>
-                    <div class="rank" id="rank-${g.id}">称号：計算中</div>
+                    <div class="timer" id="timer-${g.id}">計算中...</div>
+                    <div class="rank" id="rank-${g.id}">称号：取得中</div>
                 </div>
                 <button class="fail-btn" onclick="deleteGaman(${g.id})">負けた</button>
             </div>
@@ -244,7 +243,7 @@
             const rankEl = document.getElementById(`rank-${g.id}`);
             if (timerEl && rankEl) {
                 const diff = now - g.startTime;
-                timerEl.innerText = formatDuration(diff);
+                timerEl.innerText = `継続：${formatDuration(diff)}`;
                 rankEl.innerText = `称号：${getRank(diff)}`;
             }
         });
@@ -252,5 +251,6 @@
 
     renderList();
 </script>
+
 </body>
 </html>
